@@ -21,6 +21,76 @@ This project demonstrates a **Blue/Green deployment strategy** using AWS Elastic
             └─────────────────┘
 ```
 
+## 📊 Key Features Demonstrated
+
+- **Zero-Downtime Deployments**: Seamless traffic switching between environments
+- **Infrastructure as Code**: Complete AWS infrastructure managed with Terraform
+- **Automated Application Packaging**: Scripts for both Windows and Linux/Mac
+- **Environment Isolation**: Separate Blue and Green environments with identical configurations
+- **Version Management**: S3-based application version storage and tracking
+- **Health Monitoring**: Enhanced health reporting and environment monitoring
+- **Auto Scaling**: Configurable scaling policies for both environments
+- **Load Balancing**: Application Load Balancer with health checks
+- **IAM Security**: Least privilege access with dedicated service roles
+- **Rollback Capability**: Instant rollback by swapping environments again
+- **Multi-Platform Support**: Cross-platform deployment scripts
+- **Comprehensive Documentation**: Step-by-step guides and troubleshooting
+
+## 💰 Cost Considerations
+
+### 💵 **Estimated Monthly Costs (us-east-1)**
+
+| Resource | Configuration | Estimated Cost |
+|----------|---------------|----------------|
+| **EC2 Instances** | 2x t3.micro (Blue + Green) | ~$16.80/month |
+| **Application Load Balancer** | 2x ALB (one per environment) | ~$32.40/month |
+| **S3 Storage** | Application versions (<1GB) | ~$0.05/month |
+| **Data Transfer** | Minimal for demo usage | ~$1.00/month |
+| **Total Estimated** | | **~$50.25/month** |
+
+### 💡 **Cost Optimization Strategies**
+
+**Development/Testing:**
+- Use `t3.nano` or `t3.micro` instances
+- Terminate Green environment when not needed
+- Use scheduled scaling to shut down during off-hours
+- Consider spot instances for non-production workloads
+
+**Production Optimization:**
+- Right-size instances based on actual usage
+- Implement auto-scaling policies
+- Use Reserved Instances for predictable workloads
+- Monitor and optimize data transfer costs
+- Consider single ALB with target group switching
+
+**Cost Monitoring:**
+```bash
+# Set up billing alerts
+aws budgets create-budget --account-id <account-id> --budget file://budget.json
+
+# Monitor costs by service
+aws ce get-cost-and-usage --time-period Start=2024-01-01,End=2024-01-31 --granularity MONTHLY
+```
+
+**Free Tier Benefits:**
+- New AWS accounts get 750 hours/month of t3.micro instances
+- 5GB of S3 storage included
+- 15GB of data transfer out per month
+
+### ⚠️ **Important Cost Notes**
+
+- **Dual Environment Cost**: Running both Blue and Green simultaneously doubles compute costs
+- **Load Balancer Costs**: Each environment has its own ALB (consider shared ALB for cost savings)
+- **Data Transfer**: Cross-AZ traffic incurs charges
+- **Storage**: Application versions in S3 accumulate over time
+
+### 🎯 **Cost-Effective Alternatives**
+
+1. **Single Environment with Rolling Deployments**: Lower cost but brief downtime
+2. **Shared ALB with Target Groups**: Reduce load balancer costs
+3. **Container-based Deployments**: Use ECS/EKS for more efficient resource utilization
+4. **Serverless Approach**: Consider Lambda + API Gateway for applicable workloads
+
 ## 📋 Prerequisites
 
 - **AWS CLI** configured with appropriate permissions
@@ -34,7 +104,7 @@ This project demonstrates a **Blue/Green deployment strategy** using AWS Elastic
 
 ```bash
 git clone <repository-url>
-cd Day-17
+cd <repository-url>
 ```
 
 ### 2. Configure Variables
